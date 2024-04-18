@@ -110,7 +110,7 @@ function validate(input: Validatable) {
   return isValid;
 }
 
-// NOTE: abstract classes —> strictly inheritance (no instantiation) **
+// NOTE: abstract class —> strictly inheritance (no instantiation) **
 abstract class Component<T extends HTMLElement, U extends HTMLElement> {
   template: HTMLTemplateElement;
   host: T;
@@ -269,10 +269,14 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
 
     this.assignedProjects = [];
 
-    /* arrow fn —> "this" == obj from which outer fn called
-    (i.e. constructor) */
+    this.configure();
+    this.renderContent();
+  }
+
+  configure() {
+    // arrow fn —> "this" == obj from which "configure" called
     projectState.addListener((projects: Project[]) => {
-      /* first listener added to projectState's list of listeners (at runtime)
+      /* 1st listener —> added to projectState's list of listeners (at runtime)
 
         NOTE: does not actually EXEC until ProjectState.addProject invoked! **
         (when each listener passed full list of projects)
@@ -283,14 +287,9 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
         }
         return project.status === ProjectStatus.Completed;
       });
-
       this.renderProjects();
     });
-
-    this.renderContent();
   }
-
-  configure() {}
 
   renderContent() {
     this.newElem.querySelector('ul')!.id = `${ this.type }-projects-list`;
