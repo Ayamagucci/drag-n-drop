@@ -11,16 +11,25 @@ class Project {
 }
 
 // each listener == fn
-type Listener = (projects: Project[]) => void;
+type Listener<T> = (items: T[]) => void;
+
+class State<T> {
+  protected listeners: Listener<T>[] = [];
+
+  addListener(listener: Listener<T>) {
+    this.listeners.push(listener);
+  }
+}
 
 // SINGLETON
-class ProjectState {
+class ProjectState extends State<Project> {
   private static instance: ProjectState;
 
   private projects: Project[] = [];
-  private listeners: Listener[] = [];
 
-  private constructor() {} // NOTE: still req for initialization **
+  private constructor() {
+    super();
+  }
 
   static getInstance() {
     if (!this.instance) {
@@ -29,24 +38,25 @@ class ProjectState {
     return this.instance;
   }
 
-  addListener(listener: Listener) {
-    this.listeners.push(listener);
-  }
-
   addProject(title: string, description: string, people: number) {
-    const newProject = new Project(
-      ProjectStatus.Active, // active by default
-      Math.random().toString(),
-      title,
-      description,
-      people
-    );
-    this.projects.push(newProject);
+    // (BONUS): check if project already registered —> avoid duplicates **
+    const projectPresent = this.projects.find(project => project.title === title);
 
-    /* INVOKE EACH LISTENER **
-    (w/ shallow copy of full projects array) */
-    for (const listener of this.listeners) {
-      listener(this.projects.slice());
+    if (!projectPresent) {
+      const newProject = new Project(
+        ProjectStatus.Active, // active by default
+        Math.random().toString(),
+        title,
+        description,
+        people
+      );
+      this.projects.push(newProject);
+
+      /* INVOKE EACH LISTENER **
+      (w/ shallow copy of full projects array) */
+      for (const listener of this.listeners) {
+        listener(this.projects.slice());
+      }
     }
   }
 }
@@ -133,7 +143,7 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
 
     this.newElem = importedNode.firstElementChild as U;
     if (newId) {
-      this.newElem.id = newId // applies CSS styling
+      this.newElem.id = newId // applies CSS styling **
     }
 
     this.attach(position);
@@ -233,7 +243,7 @@ class ProjectForm extends Component<HTMLDivElement, HTMLFormElement> {
     const validDescription: Validatable = {
       value: inputDescription,
       required: true,
-      minLength: 5
+      // minLength: 5
     };
     const validPeople: Validatable = {
       value: +inputPeople,
@@ -259,6 +269,25 @@ class ProjectForm extends Component<HTMLDivElement, HTMLFormElement> {
     this.description.value = '';
     this.people.value = '';
   }
+}
+
+class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+  private project: Project;
+
+  constructor(hostId: string, project: Project) {
+    super('single-project', hostId, 'beforeend', project.id);
+    this.project = project;
+
+    this.renderContent();
+  }
+
+  renderContent() {
+    this.newElem.querySelector('h2')!.textContent = this.project.title;
+    this.newElem.querySelector('h3')!.textContent = this.project.people.toString();
+    this.newElem.querySelector('p')!.textContent = this.project.description;
+  }
+
+  configure() {}
 }
 
 class ProjectList extends Component<HTMLDivElement, HTMLElement> {
@@ -287,6 +316,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
         }
         return project.status === ProjectStatus.Completed;
       });
+
       this.renderProjects();
     });
   }
@@ -299,13 +329,17 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
   private renderProjects() {
     const list = document.getElementById(`${ this.type }-projects-list`)! as HTMLUListElement;
 
-    list.innerHTML = ''; // NOTE: ensures each list renders w/ most up-to-date data & avoids duplicates **
+    list.innerHTML = ''; // clear list before rendering **
 
     for (const project of this.assignedProjects) {
+      /*
       const listItem = document.createElement('li');
       listItem.textContent = project.title;
 
       list.appendChild(listItem);
+      */
+
+      new ProjectItem(this.newElem.id, project);
     }
   }
 }
