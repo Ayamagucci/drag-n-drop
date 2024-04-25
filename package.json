@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "watch": "tsc -w",
-    "build": "webpack"
+    "build": "webpack",
+    "watch": "tsc -w"
   },
   "author": "",
   "license": "ISC",

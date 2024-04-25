@@ -11,8 +11,9 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './src/app.ts',
+  entry: './src/app.ts', // path to TS file
   devServer: {
+    // analogous to express.static()
     static: [
       {
         directory: path.join(__dirname)
@@ -21,14 +22,14 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'), // absolute path to outDir
+    path: path.resolve(__dirname, 'dist'), // ABSOLUTE path to outDir
     publicPath: '/dist/'
   },
   module: {
     rules: [
       {
         test: /\.ts$/, // checks if rule should apply
-        use: 'ts-loader',
+        use: 'ts-loader', // transpiles TS —> JS **
         exclude: /node_modules/ // NOTE: good general exclusion
       }
     ]
