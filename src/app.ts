@@ -422,3 +422,11 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
 const inputs = new ProjectForm();
 const activeProjects = new ProjectList('active');
 const completedProjects = new ProjectList('completed');
+
+/* WEBPACK — TSCONFIG
+  Considerations: target, module, outDir
+  • NOTE: changed module to "ES6"
+    (from "commonjs")
+
+  rootDir no longer necessary
+*/
