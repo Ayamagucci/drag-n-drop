@@ -23,7 +23,6 @@ class State<T> {
 // SINGLETON
 class ProjectState extends State<Project> {
   private static instance: ProjectState;
-
   private projects: Project[] = [];
 
   private constructor() {
@@ -66,7 +65,10 @@ class ProjectState extends State<Project> {
   moveProject(projectId: string, newStatus: ProjectStatus) {
     const project = this.projects.find(project => project.id === projectId);
 
-    if (project && project.status !== newStatus /* same list —> no rerender */) {
+    if (
+      project &&
+      project.status !== newStatus // same list —> no rerender
+    ) {
       project.status = newStatus;
     }
 
@@ -161,7 +163,7 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
     this.attach(position);
   }
 
-  private attach(position: InsertPosition /* native TS enum (not str!) */) {
+  private attach(position: InsertPosition /* native TS enum */) {
     this.host.insertAdjacentElement(position, this.newElem);
   }
 
@@ -220,27 +222,6 @@ class ProjectForm extends Component<HTMLDivElement, HTMLFormElement> {
    this.host.insertAdjacentElement('afterbegin', this.newElem);
   }
 
-  @AutoBind
-  private handleSubmit(e: Event) {
-    e.preventDefault();
-
-    // "this" == elem from which event originated (i.e. this.form) **
-    // console.log(this); // <form id="user-input"></form> **
-    // console.log(`title: ${ this.title.value }`);
-
-    // VALIDATION
-    const userInputs = this.getUserInputs();
-    if (Array.isArray(userInputs)) {
-      const [ title, description, people ] = userInputs;
-
-      projectState.addProject(title, description, people);
-
-      // console.log(`title: "${ title }", description: "${ description }", people: "${ people }"`);
-    }
-
-    this.clearInputs();
-  }
-
   private getUserInputs(): [ string, string, number ] | void {
     const inputTitle = this.title.value;
     const inputDescription = this.description.value;
@@ -279,6 +260,26 @@ class ProjectForm extends Component<HTMLDivElement, HTMLFormElement> {
     this.title.value = '';
     this.description.value = '';
     this.people.value = '';
+  }
+
+  @AutoBind
+  private handleSubmit(e: Event) {
+    e.preventDefault();
+
+    // "this" == elem from which event originated (i.e. this.form) **
+    // console.log(this); // <form id="user-input"></form> **
+    // console.log(`title: ${ this.title.value }`);
+
+    // VALIDATION
+    const userInputs = this.getUserInputs();
+    if (Array.isArray(userInputs)) {
+      const [ title, description, people ] = userInputs;
+
+      // console.log(`title: "${ title }", description: "${ description }", people: "${ people }"`);
+
+      projectState.addProject(title, description, people);
+    }
+    this.clearInputs();
   }
 }
 
@@ -346,16 +347,6 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
     this.renderContent();
   }
 
-  @AutoBind
-  drop(e: DragEvent) {
-    const projectId = e.dataTransfer!.getData('text/plain');
-
-    projectState.moveProject(
-      projectId,
-      this.type === 'active' ? ProjectStatus.Active : ProjectStatus.Completed // type —> drop location **
-    );
-  }
-
   // NOTE: dragOver + dragLeave —> visual feedback
 
   @AutoBind
@@ -374,11 +365,17 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
     list.classList.remove('droppable');
   }
 
-  configure() {
-    this.newElem.addEventListener('dragover', this.dragOver);
-    this.newElem.addEventListener('dragleave', this.dragLeave);
-    this.newElem.addEventListener('drop', this.drop);
+  @AutoBind
+  drop(e: DragEvent) {
+    const projectId = e.dataTransfer!.getData('text/plain');
 
+    projectState.moveProject(
+      projectId,
+      this.type === 'active' ? ProjectStatus.Active : ProjectStatus.Completed // type —> drop location **
+    );
+  }
+
+  configure() {
     // arrow fn —> "this" == obj from which "configure" called
     projectState.addListener((projects: Project[]) => {
       /* 1st listener —> added to projectState's list of listeners (at runtime)
@@ -395,6 +392,10 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
 
       this.renderProjects();
     });
+
+    this.newElem.addEventListener('dragover', this.dragOver);
+    this.newElem.addEventListener('dragleave', this.dragLeave);
+    this.newElem.addEventListener('drop', this.drop);
   }
 
   private renderProjects() {
@@ -422,11 +423,3 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
 const inputs = new ProjectForm();
 const activeProjects = new ProjectList('active');
 const completedProjects = new ProjectList('completed');
-
-/* WEBPACK — TSCONFIG
-  Considerations: target, module, outDir
-  • NOTE: changed module to "ES6"
-    (from "commonjs")
-
-  rootDir no longer necessary
-*/

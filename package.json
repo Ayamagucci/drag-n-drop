@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "lite-server",
+    "start": "webpack-dev-server",
     "watch": "tsc -w",
     "build": "webpack"
   },
