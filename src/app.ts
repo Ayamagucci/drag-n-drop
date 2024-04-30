@@ -1,4 +1,4 @@
-/* ES modules —> "" file ext **
+/* ES modules —> ".js" file ext **
   (can enable "allowImportingTsExtensions" in TSConfig)
 
 modify tsconfig + HTML script tag
