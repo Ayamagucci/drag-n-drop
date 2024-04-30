@@ -1,3 +1,5 @@
+// bundle —> fewer HTTP reqs —> faster load times
+
 /* TSCONFIG
   Considerations: target, module, outDir
   • NOTE: changed module to "ES6"
@@ -6,22 +8,24 @@
   rootDir no longer necessary
 */
 
-// NOTE: webpack config == always CommonJS (despite TSC module) **
+/* NOTE: typically written in CommonJS syntax
+(ES —> add [ "type": "module" ] to package.json) */
 const path = require('path');
 
 module.exports = {
   mode: 'development',
   entry: './src/app.ts', // path to TS file
   devServer: {
-    // analogous to express.static()
+    port: 3000,
     static: [
+      // analogous to express.static()
       {
         directory: path.join(__dirname)
       }
     ]
   },
   output: {
-    filename: 'bundle.js',
+    filename: 'bundle.js', // NOTE: must match script in index.html **
     path: path.resolve(__dirname, 'dist'), // ABSOLUTE path to outDir
     publicPath: '/dist/'
   },
@@ -42,6 +46,5 @@ module.exports = {
 
 /* ADDITIONAL NOTES
   • CLI —> "webpack-dev-server"
-
   • can also use dynamic parts (e.g. "bundle.[contenthash].js")
 */
