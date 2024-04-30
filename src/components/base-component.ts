@@ -22,7 +22,7 @@ export abstract class Component<T extends HTMLElement, U extends HTMLElement> {
     this.attach(position);
   }
 
-  private attach(position: InsertPosition /* native TS enum */) {
+  private attach(position: InsertPosition) {
     this.host.insertAdjacentElement(position, this.newElem);
   }
 

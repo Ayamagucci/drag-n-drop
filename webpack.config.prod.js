@@ -6,18 +6,9 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // cleans build 
 module.exports = {
   mode: 'production',
   entry: './src/app.ts',
-  devServer: {
-    port: 3000,
-    static: [
-      {
-        directory: path.join(__dirname)
-      }
-    ]
-  },
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: '/dist/'
+    path: path.resolve(__dirname, 'dist')
   },
   module: {
     rules: [
@@ -31,7 +22,7 @@ module.exports = {
   resolve: {
     extensions: [ '.ts', '.js' ]
   },
-  devtool: 'inline-source-map',
+  devtool: 'source-map', // REC for production (served separately + DL PRN)
   plugins: [
    new CleanWebpackPlugin()
   ]

@@ -37,7 +37,7 @@ export class ProjectList extends Component<HTMLDivElement, HTMLElement> implemen
 
     projectState.moveProject(
       projectId,
-      this.type === 'active' ? ProjectStatus.Active : ProjectStatus.Completed // type —> drop location **
+      this.type === 'active' ? ProjectStatus.Active : ProjectStatus.Completed
     );
   }
 

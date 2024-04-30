@@ -1,11 +1,11 @@
 // bundle —> fewer HTTP reqs —> faster load times
 
 /* TSCONFIG
-  Considerations: target, module, outDir
+  Considerations: target, module
   • NOTE: changed module to "ES6"
     (from "CommonJS")
 
-  rootDir no longer necessary
+  outDir + rootDir no longer necessary
 */
 
 /* NOTE: typically written in CommonJS syntax
@@ -26,8 +26,7 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js', // NOTE: must match script in index.html **
-    path: path.resolve(__dirname, 'dist'), // ABSOLUTE path to outDir
-    publicPath: '/dist/'
+    path: path.resolve(__dirname, 'dist') // ABSOLUTE path to outDir
   },
   module: {
     rules: [
