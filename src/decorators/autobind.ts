@@ -1,4 +1,8 @@
-export function AutoBind(_: any, _2: string, descriptor: PropertyDescriptor): PropertyDescriptor {
+export function AutoBind(
+  _: any,
+  _2: string,
+  descriptor: PropertyDescriptor
+): PropertyDescriptor {
   const originalMethod = descriptor.value;
 
   const newDescriptor: PropertyDescriptor = {

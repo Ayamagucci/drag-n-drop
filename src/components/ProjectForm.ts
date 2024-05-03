@@ -1,9 +1,11 @@
-import { Component } from './base-component';
+import { Component } from './Component';
 import { Validatable, validate } from '../util/validation';
-import { AutoBind } from '../decorators/autobind';
-import { projectState } from '../state/project-state';
+import { AutoBind } from '../decorators/Autobind';
+import { projectState } from '../state/projectState';
 
-export class ProjectForm extends Component<HTMLDivElement, HTMLFormElement> {
+export class ProjectForm
+  extends Component<HTMLDivElement, HTMLFormElement> {
+
   title: HTMLInputElement;
   description: HTMLInputElement;
   people: HTMLInputElement;
@@ -21,10 +23,6 @@ export class ProjectForm extends Component<HTMLDivElement, HTMLFormElement> {
 
   configure() {
     this.newElem.addEventListener('submit', this.handleSubmit);
-  }
-
-  renderContent() {
-   this.host.insertAdjacentElement('afterbegin', this.newElem);
   }
 
   private getUserInputs(): [ string, string, number ] | void {
@@ -70,6 +68,7 @@ export class ProjectForm extends Component<HTMLDivElement, HTMLFormElement> {
     e.preventDefault();
 
     const userInputs = this.getUserInputs();
+
     if (Array.isArray(userInputs)) {
       const [ title, description, people ] = userInputs;
       projectState.addProject(title, description, people);
@@ -77,4 +76,8 @@ export class ProjectForm extends Component<HTMLDivElement, HTMLFormElement> {
 
     this.clearInputs();
   }
+
+  renderContent() {
+    this.host.insertAdjacentElement('afterbegin', this.newElem);
+   }
 }

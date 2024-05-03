@@ -1,13 +1,11 @@
-// CLI: "webpack --config [ desired config file ]"
-
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // cleans build folder before writing new bundle
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'production',
   entry: './src/app.ts',
   output: {
-    filename: 'bundle.js',
+    filename: 'bundle.js',  // NOTE: adjust <script> accordingly **
     path: path.resolve(__dirname, 'dist')
   },
   module: {
@@ -20,10 +18,10 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [ '.ts', '.js' ]
+    extensions: [ '.ts', '.js' ] // NOTE: must remove exts from imports **
   },
-  devtool: 'source-map', // REC for production (served separately + DL PRN)
+  devtool: 'source-map',
   plugins: [
-   new CleanWebpackPlugin()
+    new CleanWebpackPlugin()
   ]
 };

@@ -1,49 +1,31 @@
-// bundle —> fewer HTTP reqs —> faster load times
-
-/* TSCONFIG
-  Considerations: target, module
-  • NOTE: changed module to "ES6"
-    (from "CommonJS")
-
-  outDir + rootDir no longer necessary
-*/
-
-/* NOTE: typically written in CommonJS syntax
-(ES —> add [ "type": "module" ] to package.json) */
 const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './src/app.ts', // path to TS file
+  entry: './src/app.ts',
   devServer: {
     port: 3000,
     static: [
-      // analogous to express.static()
       {
         directory: path.join(__dirname)
       }
     ]
   },
   output: {
-    filename: 'bundle.js', // NOTE: must match script in index.html **
-    path: path.resolve(__dirname, 'dist') // ABSOLUTE path to outDir
+    filename: 'bundle.js', // NOTE: adjust <script> accordingly **
+    path: path.resolve(__dirname, 'dist')
   },
   module: {
     rules: [
       {
-        test: /\.ts$/, // checks if rule should apply
-        use: 'ts-loader', // transpiles TS —> JS **
-        exclude: /node_modules/ // NOTE: good general exclusion
+        test: /\.ts$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
       }
     ]
   },
   resolve: {
-    extensions: [ '.ts', '.js' ]
+    extensions: [ '.ts', '.js' ] // NOTE: remove exts from imports **
   },
-  devtool: 'inline-source-map' // bundles TS source maps
+  devtool: 'inline-source-map'
 };
-
-/* ADDITIONAL NOTES
-  • CLI —> "webpack-dev-server"
-  • can also use dynamic parts (e.g. "bundle.[contenthash].js")
-*/

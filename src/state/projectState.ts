@@ -1,4 +1,4 @@
-import { Project, ProjectStatus } from '../models/project';
+import { Project, ProjectStatus } from '../models/Project';
 
 type Listener<T> = (items: T[]) => void;
 
@@ -49,11 +49,14 @@ class ProjectState extends State<Project> {
   }
 
   moveProject(projectId: string, newStatus: ProjectStatus) {
-    const project = this.projects.find(project => project.id === projectId);
+    const project = this.projects.find(
+      project => project.id === projectId
+    );
 
     if (project && project.status !== newStatus) {
       project.status = newStatus;
     }
+
     this.updateListeners();
   }
 }
@@ -61,6 +64,6 @@ class ProjectState extends State<Project> {
 /* NOTE: code from imported modules only run ONCE **
   (regardless of num of imports)
 */
-console.log('RUNNING...'); // only printed once, despite multiple imports
+console.log('RUNNING...');
 
 export const projectState = ProjectState.getInstance();

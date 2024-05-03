@@ -1,4 +1,7 @@
-export abstract class Component<T extends HTMLElement, U extends HTMLElement> {
+export abstract class Component<
+  T extends HTMLElement,
+  U extends HTMLElement
+> {
   template: HTMLTemplateElement;
   host: T;
   newElem: U;
