@@ -1,5 +1,5 @@
 import { Component } from './Component';
-import { Draggable } from '../models/Draggable-DragTarget';
+import { Draggable } from '../models/Draggable-DropTarget';
 import { Project } from '../models/Project';
 import { AutoBind } from '../decorators/Autobind';
 
@@ -36,13 +36,13 @@ export class ProjectItem
 
   @AutoBind
   handleStart(e: DragEvent) {
-    console.log(e);
-
     // DataTransfer.setData(format, data)
     e.dataTransfer!.setData('text/plain', this.project.id);
 
-    // DataTransfer.effectAllowed = 'none' | 'move' | 'copy' | 'link' | 'copyMove' | 'copyLink' | 'linkMove' | 'all';
+    // DataTransfer.effectAllowed = 'none' | 'move' | 'copy' | 'link' | 'copyMove' | 'copyLink' | 'linkMove' | 'all'
     e.dataTransfer!.effectAllowed = 'move';
+
+    console.log(e);
   }
 
   handleEnd(_: DragEvent) {

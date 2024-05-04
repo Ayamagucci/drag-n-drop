@@ -1,5 +1,5 @@
 import { Component } from './Component';
-import { DragTarget } from '../models/Draggable-DragTarget';
+import { DropTarget } from '../models/Draggable-DropTarget';
 import { Project, ProjectStatus } from '../models/Project';
 import { AutoBind } from '../decorators/Autobind';
 import { projectState } from '../state/projectState';
@@ -7,16 +7,16 @@ import { ProjectItem } from './ProjectItem';
 
 export class ProjectList
   extends Component<HTMLDivElement, HTMLElement>
-  implements DragTarget {
+  implements DropTarget {
 
   assignedProjects: Project[] = [];
 
-  constructor(private listType: 'active' | 'completed') {
+  constructor(private type: 'active' | 'completed') {
     super(
       'project-list',
       'app',
       'beforeend',
-      `${ listType }-projects`
+      `${ type }-projects`
     );
 
     this.configure();
@@ -26,7 +26,7 @@ export class ProjectList
   configure() {
     projectState.addListener((projects: Project[]) => {
       this.assignedProjects = projects.filter(
-        project => this.listType === 'active'
+        project => this.type === 'active'
           ? project.status === ProjectStatus.Active
           : project.status === ProjectStatus.Completed
       );
@@ -45,8 +45,6 @@ export class ProjectList
       e.dataTransfer &&
       e.dataTransfer.types[0] === 'text/plain'
     ) {
-      e.preventDefault();
-
       const list = this.newElem.querySelector('ul')!;
       list.classList.add('droppable');
     }
@@ -60,21 +58,23 @@ export class ProjectList
 
   @AutoBind
   drop(e: DragEvent) {
+    e.preventDefault();
+
     const projectId = e.dataTransfer!.getData('text/plain');
 
     projectState.moveProject(
       projectId,
-      this.listType === 'active'
+      this.type === 'active'
         ? ProjectStatus.Active
         : ProjectStatus.Completed
     );
   }
 
-  // NOTE: each DataTransfer obj exists only during their corresponding drag-drop operation **
+  // NOTE: each DataTransfer obj only exists during their corresponding drag-drop operation **
 
   private renderProjects() {
     const list = document.getElementById(
-      `${ this.listType }-projects-list`
+      `${ this.type }-projects-list`
     )! as HTMLUListElement;
 
     list.innerHTML = '';
@@ -88,7 +88,7 @@ export class ProjectList
   }
 
   renderContent() {
-    this.newElem.querySelector('ul')!.id = `${ this.listType }-projects-list`;
-    this.newElem.querySelector('h2')!.textContent = `${ this.listType.toUpperCase() } PROJECTS`;
+    this.newElem.querySelector('ul')!.id = `${ this.type }-projects-list`;
+    this.newElem.querySelector('h2')!.textContent = `${ this.type.toUpperCase() } PROJECTS`;
   }
 }

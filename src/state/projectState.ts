@@ -1,3 +1,4 @@
+import { AutoBind } from '../decorators/Autobind';
 import { Project, ProjectStatus } from '../models/Project';
 
 type Listener<T> = (items: T[]) => void;
@@ -69,6 +70,10 @@ class ProjectState extends State<Project> {
     }
 
     this.updateListeners();
+  }
+
+  getProjects(): Project[] {
+    return this.projects.slice();
   }
 }
 
