@@ -5,7 +5,7 @@ module.exports = {
   mode: 'production',
   entry: './src/app.ts',
   output: {
-    filename: 'bundle.js',  // NOTE: adjust <script> accordingly **
+    filename: 'bundle.js', // NOTE: adjust <script> accordingly **
     path: path.resolve(__dirname, 'dist')
   },
   module: {
@@ -18,7 +18,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [ '.ts', '.js' ] // NOTE: must remove exts from imports **
+    extensions: [ '.ts' ] // NOTE: webpack resolves ".js" ext by default
   },
   devtool: 'source-map',
   plugins: [
