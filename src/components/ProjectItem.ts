@@ -15,15 +15,21 @@ export class ProjectItem
       : `${ this.project.people } people`;
   }
 
-  constructor(hostId: string, project: Project) {
-    super('single-project', hostId, 'beforeend', project.id);
-    this.project = project;
+  constructor(hostId: string, newProject: Project) {
+    super(
+      'single-project',
+      hostId,
+      'beforeend',
+      newProject.id
+    );
+    this.project = newProject;
 
     this.configure();
     this.renderContent();
   }
 
   configure() {
+    // add listeners to draggable elem
     this.newElem.addEventListener('dragstart', this.handleStart);
     this.newElem.addEventListener('dragend', this.handleEnd);
   }
@@ -32,7 +38,10 @@ export class ProjectItem
   handleStart(e: DragEvent) {
     console.log(e);
 
+    // DataTransfer.setData(format, data)
     e.dataTransfer!.setData('text/plain', this.project.id);
+
+    // DataTransfer.effectAllowed = 'none' | 'move' | 'copy' | 'link' | 'copyMove' | 'copyLink' | 'linkMove' | 'all';
     e.dataTransfer!.effectAllowed = 'move';
   }
 

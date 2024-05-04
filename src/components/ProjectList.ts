@@ -11,8 +11,13 @@ export class ProjectList
 
   assignedProjects: Project[] = [];
 
-  constructor(private type: 'active' | 'completed') {
-    super('project-list', 'app', 'beforeend', `${ type }-projects`);
+  constructor(private listType: 'active' | 'completed') {
+    super(
+      'project-list',
+      'app',
+      'beforeend',
+      `${ listType }-projects`
+    );
 
     this.configure();
     this.renderContent();
@@ -21,7 +26,7 @@ export class ProjectList
   configure() {
     projectState.addListener((projects: Project[]) => {
       this.assignedProjects = projects.filter(
-        project => this.type === 'active'
+        project => this.listType === 'active'
           ? project.status === ProjectStatus.Active
           : project.status === ProjectStatus.Completed
       );
@@ -34,24 +39,12 @@ export class ProjectList
     this.newElem.addEventListener('drop', this.drop);
   }
 
-  private renderProjects() {
-    const list = document.getElementById(
-      `${ this.type }-projects-list`
-    )! as HTMLUListElement;
-
-    list.innerHTML = '';
-
-    for (const project of this.assignedProjects) {
-      new ProjectItem(
-        this.newElem.querySelector('ul')!.id,
-        project
-      );
-    }
-  }
-
   @AutoBind
   dragOver(e: DragEvent) {
-    if (e.dataTransfer && e.dataTransfer.types[0] === 'text/plain') {
+    if (
+      e.dataTransfer &&
+      e.dataTransfer.types[0] === 'text/plain'
+    ) {
       e.preventDefault();
 
       const list = this.newElem.querySelector('ul')!;
@@ -71,14 +64,31 @@ export class ProjectList
 
     projectState.moveProject(
       projectId,
-      this.type === 'active'
+      this.listType === 'active'
         ? ProjectStatus.Active
         : ProjectStatus.Completed
     );
   }
 
+  // NOTE: each DataTransfer obj exists only during their corresponding drag-drop operation **
+
+  private renderProjects() {
+    const list = document.getElementById(
+      `${ this.listType }-projects-list`
+    )! as HTMLUListElement;
+
+    list.innerHTML = '';
+
+    for (const project of this.assignedProjects) {
+      new ProjectItem(
+        this.newElem.querySelector('ul')!.id,
+        project
+      );
+    }
+  }
+
   renderContent() {
-    this.newElem.querySelector('ul')!.id = `${ this.type }-projects-list`;
-    this.newElem.querySelector('h2')!.textContent = `${ this.type.toUpperCase() } PROJECTS`;
+    this.newElem.querySelector('ul')!.id = `${ this.listType }-projects-list`;
+    this.newElem.querySelector('h2')!.textContent = `${ this.listType.toUpperCase() } PROJECTS`;
   }
 }

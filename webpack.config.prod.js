@@ -18,7 +18,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [ '.ts' ] // NOTE: webpack resolves ".js" ext by default
+    extensions: [ '.ts' ]
   },
   devtool: 'source-map',
   plugins: [

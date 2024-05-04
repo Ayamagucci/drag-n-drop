@@ -15,9 +15,12 @@ export abstract class Component<
     this.template = document.getElementById(templateId)! as HTMLTemplateElement;
     this.host = document.getElementById(hostId)! as T;
 
-    const importedNode = document.importNode(this.template.content, true);
-
+    const importedNode = document.importNode(
+      this.template.content,
+      true
+    );
     this.newElem = importedNode.firstElementChild as U;
+
     if (newId) {
       this.newElem.id = newId;
     }

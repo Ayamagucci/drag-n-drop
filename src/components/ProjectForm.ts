@@ -11,7 +11,12 @@ export class ProjectForm
   people: HTMLInputElement;
 
   constructor() {
-    super('project-input', 'app', 'afterbegin', 'user-input');
+    super(
+      'project-input',
+      'app',
+      'afterbegin',
+      'user-input'
+    );
 
     this.title = this.newElem.querySelector('#title') as HTMLInputElement;
     this.description = this.newElem.querySelector('#description') as HTMLInputElement;

@@ -31,8 +31,15 @@ class ProjectState extends State<Project> {
     }
   }
 
-  addProject(title: string, description: string, people: number) {
-    const project = this.projects.find(project => project.title === title);
+  addProject(
+    title: string,
+    description: string,
+    people: number
+  ) {
+    // check for existing title
+    const project = this.projects.find(
+      project => project.title === title
+    );
 
     if (!project) {
       const newProject = new Project(
@@ -48,11 +55,15 @@ class ProjectState extends State<Project> {
     }
   }
 
-  moveProject(projectId: string, newStatus: ProjectStatus) {
+  moveProject(
+    id: string,
+    newStatus: ProjectStatus
+  ) {
     const project = this.projects.find(
-      project => project.id === projectId
+      project => project.id === id
     );
 
+    // avoids rerenders if dragged to same list
     if (project && project.status !== newStatus) {
       project.status = newStatus;
     }
