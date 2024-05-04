@@ -15,7 +15,7 @@ module.exports = {
     filename: 'bundle.js', // NOTE: adjust <script> accordingly **
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/dist/'
-    /* assets (devServer.static) served from memory to this URL
+    /* assets (devServer.static) served to this URL from memory
       (NOTE: not written to disk! **)
     */
   },
