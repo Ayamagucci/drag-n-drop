@@ -26,9 +26,9 @@ export class ProjectList
   configure() {
     projectState.addListener((projects: Project[]) => {
       this.assignedProjects = projects.filter(
-        project => this.type === 'active'
-          ? project.status === ProjectStatus.Active
-          : project.status === ProjectStatus.Completed
+        prj => this.type === 'active'
+          ? prj.status === ProjectStatus.Active
+          : prj.status === ProjectStatus.Completed
       );
 
       this.renderProjects();
@@ -45,6 +45,8 @@ export class ProjectList
       e.dataTransfer &&
       e.dataTransfer.types[0] === 'text/plain'
     ) {
+      e.preventDefault(); // prevent default to allow drop! **
+
       const list = this.newElem.querySelector('ul')!;
       list.classList.add('droppable');
     }
@@ -58,8 +60,6 @@ export class ProjectList
 
   @AutoBind
   drop(e: DragEvent) {
-    e.preventDefault();
-
     const projectId = e.dataTransfer!.getData('text/plain');
 
     projectState.moveProject(
