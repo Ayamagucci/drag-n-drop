@@ -42,18 +42,21 @@ class ProjectState extends State<Project> {
       project => project.title === title
     );
 
-    if (!project) {
-      const newProject = new Project(
-        ProjectStatus.Active,
-        Math.random().toString(),
-        title,
-        description,
-        people
-      );
-      this.projects.push(newProject);
-
-      this.updateListeners();
+    if (project) {
+      alert(`Title "${ title }" already exists — please use another!`);
+      return;
     }
+
+    const newProject = new Project(
+      ProjectStatus.Active,
+      Math.random().toString(),
+      title,
+      description,
+      people
+    );
+    this.projects.push(newProject);
+
+    this.updateListeners();
   }
 
   moveProject(
